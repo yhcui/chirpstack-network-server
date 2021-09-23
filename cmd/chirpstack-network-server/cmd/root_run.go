@@ -65,8 +65,8 @@ func run(cmd *cobra.Command, args []string) error {
 		printStartMessage, // 打印启动日志
 		setupMonitoring,
 		enableUplinkChannels,
-		setupStorage, // 启动存储相关的.连接redis和PostgreSQL
-		setGatewayBackend,
+		setupStorage,      // 启动存储相关的.连接redis和PostgreSQL
+		setGatewayBackend, // MQTT相关服务
 		setupApplicationServer,
 		setupADR,
 		setupJoinServer,

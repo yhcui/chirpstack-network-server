@@ -34,6 +34,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	//初始化toml配置文件
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "path to configuration file (optional)")
@@ -144,6 +145,7 @@ func initConfig() {
 		viper.AddConfigPath(".")
 		viper.AddConfigPath("$HOME/.config/chirpstack-network-server")
 		viper.AddConfigPath("/etc/chirpstack-network-server")
+		viper.AddConfigPath("/Users/cuiyuhui/work/enn/sourcecode/chirpstack-network-server/packaging/files")
 		if err := viper.ReadInConfig(); err != nil {
 			switch err.(type) {
 			case viper.ConfigFileNotFoundError:
