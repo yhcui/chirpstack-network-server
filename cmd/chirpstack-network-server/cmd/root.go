@@ -123,6 +123,10 @@ func Execute(v string) {
 	}
 }
 
+/*
+@cuiyuhui
+读取tomal配置文件
+*/
 func initConfig() {
 	config.Version = version
 
