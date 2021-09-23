@@ -62,10 +62,10 @@ func run(cmd *cobra.Command, args []string) error {
 		setGRPCResolver,
 		setupBand,
 		setRXParameters,
-		printStartMessage,
+		printStartMessage, // 打印启动日志
 		setupMonitoring,
 		enableUplinkChannels,
-		setupStorage,
+		setupStorage, // 启动存储相关的.连接redis和PostgreSQL
 		setGatewayBackend,
 		setupApplicationServer,
 		setupADR,
@@ -79,7 +79,7 @@ func run(cmd *cobra.Command, args []string) error {
 		startLoRaServer(server),
 		startQueueScheduler,
 	}
-
+	// 循环启动每一个任务
 	for _, t := range tasks {
 		if err := t(); err != nil {
 			log.Fatal(err)
