@@ -38,7 +38,7 @@ func setSyslog() error {
 	if err != nil {
 		return errors.Wrap(err, "get syslog hook error")
 	}
-
+	// 通过Hook机制分发
 	log.AddHook(hook)
 
 	return nil

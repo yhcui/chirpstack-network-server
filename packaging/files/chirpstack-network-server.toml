@@ -160,14 +160,15 @@ net_id="000000"
     command_topic_template="gateway/{{ .GatewayID }}/command/{{ .CommandType }}"
 
     # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-    server="tcp://localhost:1883"
+    server="tcp://127.0.0.1:1883"
 
     # Connect with the given username (optional)
-    username=""
+    username="admin"
 
     # Connect with the given password (optional)
-    password=""
+    password="123456"
 
+    client_id="mac789746478974"
 
 # Metrics collection settings.
 [metrics]

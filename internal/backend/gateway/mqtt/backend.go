@@ -101,6 +101,7 @@ func NewBackend(c config.Config) (gateway.Gateway, error) {
 		if token := b.conn.Connect(); token.Wait() && token.Error() != nil {
 			log.Errorf("gateway/mqtt: connecting to mqtt broker failed, will retry in 2s: %s", token.Error())
 			time.Sleep(2 * time.Second)
+			//break //temp
 		} else {
 			break
 		}

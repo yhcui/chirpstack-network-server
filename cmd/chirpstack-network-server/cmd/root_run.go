@@ -57,27 +57,27 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	tasks := []func() error{
-		setLogLevel,
-		setSyslog,
-		setGRPCResolver,
-		setupBand,
-		setRXParameters,
-		printStartMessage, // 打印启动日志
-		setupMonitoring,
-		enableUplinkChannels,
-		setupStorage,      // 启动存储相关的.连接redis和PostgreSQL
-		setGatewayBackend, // MQTT相关服务
-		setupApplicationServer,
-		setupADR,
-		setupJoinServer,
-		setupNetworkController,
-		setupUplink,
-		setupDownlink,
-		setupNetworkServerAPI,
-		setupRoaming,
-		setupGateways,
-		startLoRaServer(server),
-		startQueueScheduler,
+		setLogLevel,             // 根据配置文件设置日志级别
+		setSyslog,               // system log. linux
+		setGRPCResolver,         // grpc resolver
+		setupBand,               //工作频段
+		setRXParameters,         // 接受
+		printStartMessage,       // 打印启动日志
+		setupMonitoring,         //设置时区与监控信息
+		enableUplinkChannels,    // 设置启用的上行通道
+		setupStorage,            // 启动存储相关的.连接redis和PostgreSQL
+		setGatewayBackend,       // MQTT相关服务
+		setupApplicationServer,  // 启用as,连接池
+		setupADR,                // adr插件
+		setupJoinServer,         // join server。 设备入网
+		setupNetworkController,  // 不知道干么的？
+		setupUplink,             //入网、重新入网、数据传输
+		setupDownlink,           // 入网、广播、传用、数据
+		setupNetworkServerAPI,   // 启动网络服务的http api
+		setupRoaming,            // 漫游服务
+		setupGateways,           //
+		startLoRaServer(server), //启动loRaServer 处理上下行数据
+		startQueueScheduler,     // 不知道干么的？
 	}
 	// 循环启动每一个任务
 	for _, t := range tasks {
@@ -124,11 +124,11 @@ func setupBand() error {
 
 func setRXParameters() error {
 	defaults := band.Band().GetDefaults()
-
+	// RX2数据速率.当设置为-1时，默认RX2数据速率将用于配置的LoRaWAN频带
 	if config.C.NetworkServer.NetworkSettings.RX2DR == -1 {
 		config.C.NetworkServer.NetworkSettings.RX2DR = defaults.RX2DataRate
 	}
-
+	// RX2频率 当设置为-1时，将使用默认的RX2频率。
 	if config.C.NetworkServer.NetworkSettings.RX2Frequency == -1 {
 		config.C.NetworkServer.NetworkSettings.RX2Frequency = int64(defaults.RX2Frequency)
 	}
