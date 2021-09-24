@@ -214,6 +214,7 @@ func (b *Backend) eventHandler(c paho.Client, msg paho.Message) {
 	}
 }
 
+// mqtt事件处理器 : 处理topic以up开头的
 func (b *Backend) rxPacketHandler(c paho.Client, msg paho.Message) {
 	b.wg.Add(1)
 	defer b.wg.Done()
@@ -249,10 +250,11 @@ func (b *Backend) rxPacketHandler(c paho.Client, msg paho.Message) {
 		"uplink_id":  uplinkID,
 		"gateway_id": gatewayID,
 	}).Info("gateway/mqtt: uplink frame received")
-
+	// 向Lora chan中写入数据
 	b.rxPacketChan <- uplinkFrame
 }
 
+// mqtt事件处理器 : 处理topic以stats开头的
 func (b *Backend) statsPacketHandler(c paho.Client, msg paho.Message) {
 	b.wg.Add(1)
 	defer b.wg.Done()
@@ -293,6 +295,7 @@ func (b *Backend) statsPacketHandler(c paho.Client, msg paho.Message) {
 	b.statsPacketChan <- gatewayStats
 }
 
+// mqtt事件处理器 : 处理topic以ack开头的
 func (b *Backend) ackPacketHandler(c paho.Client, msg paho.Message) {
 	b.wg.Add(1)
 	defer b.wg.Done()

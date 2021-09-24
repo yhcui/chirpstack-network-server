@@ -61,8 +61,8 @@ func run(cmd *cobra.Command, args []string) error {
 		setLogLevel,             // 根据配置文件设置日志级别
 		setSyslog,               // system log. linux
 		setGRPCResolver,         // grpc resolver
-		setupBand,               //工作频段
-		setRXParameters,         // 接受
+		setupBand,               // 设置工作频段相关信息bandName等
+		setRXParameters,         // 设置RX参数。RX2DR和RX2Frequency
 		printStartMessage,       // 打印启动日志
 		setupMonitoring,         //设置时区与监控信息
 		enableUplinkChannels,    // 设置启用的上行通道
@@ -328,6 +328,9 @@ func setupGateways() error {
 	return nil
 }
 
+/*
+消息可以是单播，也可以是组播。给一个终端设备单独发送消息使用单播，给多个终端设备发送使用组播。
+*/
 func startQueueScheduler() error {
 	log.Info("starting downlink device-queue scheduler")
 	go downlink.DeviceQueueSchedulerLoop()
