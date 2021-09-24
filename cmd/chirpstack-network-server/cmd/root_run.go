@@ -75,7 +75,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupDownlink,           // 入网、广播、传用、数据
 		setupNetworkServerAPI,   // 启动网络服务的http api
 		setupRoaming,            // 漫游服务
-		setupGateways,           //
+		setupGateways,           // 基站与NS通信的服务,如MQTT
 		startLoRaServer(server), //启动loRaServer 处理上下行数据
 		startQueueScheduler,     // 不知道干么的？
 	}
