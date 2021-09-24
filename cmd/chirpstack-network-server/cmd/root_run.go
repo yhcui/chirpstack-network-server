@@ -41,6 +41,7 @@ import (
 )
 
 func run(cmd *cobra.Command, args []string) error {
+	//创建建一个新的lora服务
 	var server = new(uplink.Server)
 
 	if cpuprofile != "" {
@@ -73,7 +74,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupNetworkController,  // 不知道干么的？
 		setupUplink,             //入网、重新入网、数据传输
 		setupDownlink,           // 入网、广播、传用、数据
-		setupNetworkServerAPI,   // 启动网络服务的http api
+		setupNetworkServerAPI,   // 启动网络服务api, grpc协议. 外部组件通过它来调度mac命令
 		setupRoaming,            // 漫游服务
 		setupGateways,           // 基站与NS通信的服务,如MQTT
 		startLoRaServer(server), //启动loRaServer 处理上下行数据

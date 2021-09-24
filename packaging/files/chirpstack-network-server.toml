@@ -41,6 +41,8 @@
 #dsn="postgres://localhost/chirpstack_ns_ns?sslmode=disable"
 dsn="postgres://postgres:123456@127.0.0.1:5432/chirpstack_ns?sslmode=disable"
 
+automigrate=true
+
 
 # Redis settings
 #
