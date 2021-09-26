@@ -314,6 +314,10 @@ func setupNetworkServerAPI() error {
 	return nil
 }
 
+/*
+大型跨国公司可能在多个国家拥有设施，不同的LoraWan运营商覆盖该领土。
+漫游使跨国公司能够与其本国境内的运营商建立单一的商业关系
+*/
 func setupRoaming() error {
 	if err := roamingapi.Setup(config.C); err != nil {
 		return errors.Wrap(err, "setup roaming api error")
