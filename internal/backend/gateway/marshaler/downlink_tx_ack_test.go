@@ -1,6 +1,7 @@
 package marshaler
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -22,7 +23,7 @@ func TestUnmarshalDownlinkTXAck(t *testing.T) {
 		m := jsonpb.Marshaler{}
 		str, err := m.MarshalToString(&in)
 		assert.NoError(err)
-
+		fmt.Println(str)
 		var out gw.DownlinkTXAck
 		typ, err := UnmarshalDownlinkTXAck([]byte(str), &out)
 		assert.NoError(err)

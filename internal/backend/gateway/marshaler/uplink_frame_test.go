@@ -1,6 +1,7 @@
 package marshaler
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -25,7 +26,7 @@ func TestUnmarshalUplinkFrame(t *testing.T) {
 		m := jsonpb.Marshaler{}
 		str, err := m.MarshalToString(&in)
 		assert.NoError(err)
-
+		fmt.Println(str)
 		var out gw.UplinkFrame
 		typ, err := UnmarshalUplinkFrame([]byte(str), &out)
 		assert.NoError(err)

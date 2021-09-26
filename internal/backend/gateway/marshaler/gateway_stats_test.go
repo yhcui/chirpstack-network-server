@@ -1,6 +1,7 @@
 package marshaler
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -22,6 +23,7 @@ func TestUnmarshalGatewayStats(t *testing.T) {
 		assert.NoError(err)
 
 		var out gw.GatewayStats
+		fmt.Println(str)
 		typ, err := UnmarshalGatewayStats([]byte(str), &out)
 		assert.NoError(err)
 		assert.Equal(JSON, typ)
