@@ -64,19 +64,19 @@ func run(cmd *cobra.Command, args []string) error {
 		setupBand,               // 设置工作频段相关信息bandName等
 		setRXParameters,         // 设置RX参数。RX2DR和RX2Frequency
 		printStartMessage,       // 打印启动日志
-		setupMonitoring,         //设置时区与监控信息
+		setupMonitoring,         // 设置时区与监控信息
 		enableUplinkChannels,    // 设置启用的上行通道
 		setupStorage,            // 启动存储相关的.连接redis和PostgreSQL
-		setGatewayBackend,       // MQTT相关服务
+		setGatewayBackend,       // 启动网关服务。此处之基站与NS的协议服务。如:MQTT
 		setupApplicationServer,  // 启用as,连接池
-		setupADR,                // adr插件
-		setupJoinServer,         // join server。 设备入网
-		setupNetworkController,  // 不知道干么的？
+		setupADR,                // adr插件, https://zhuanlan.zhihu.com/p/113746989
+		setupJoinServer,         // join server。 设备入网时进行验证的服务.
+		setupNetworkController,  // todo 提供管理无线网络的能力，它通过MAC命令获取或设置End Nodes的网络参数和射频性能
 		setupUplink,             //入网、重新入网、数据传输
 		setupDownlink,           // 入网、广播、传用、数据
 		setupNetworkServerAPI,   // 启动网络服务api, grpc协议. 外部组件通过它来调度mac命令
-		setupRoaming,            // 漫游服务
-		setupGateways,           // 基站与NS通信的服务,如MQTT
+		setupRoaming,            // 漫游服务. https://blog.csdn.net/iotisan/article/details/102612404
+		setupGateways,           // 网关状态上报?
 		startLoRaServer(server), //启动loRaServer 处理上下行数据
 		startQueueScheduler,     // 不知道干么的？
 	}
@@ -201,6 +201,18 @@ func setupStorage() error {
 	return nil
 }
 
+/*
+ADR(Adaptive Data Rate)速率自适应是LoRaWAN的核心功能之
+开启ADR功能后，NS服务器可以接管每一个终端的通信速率及发射功率，
+使得终端功耗最优以及通信速率最高，从而实现网络容量的最大化以及低功耗终端寿命的提升
+
+ADR功能需要NS服务器来动态管理网络内所有节点的通信速率及功率。然而官方协议中只明确给出了MAC命令的帧格式，
+对于NS侧的ADR算法实现（即何时，以什么为标准，将终端速率及功率到怎样的水平）Semtech并没有具体给出
+
+ADR算法不适用于移动终端，若终端节点位置相对于网关位置经常发生改变，
+那么基于最近数据包信号质量而选择的数据速率可能会和新环境不匹配而导致通信丢包。
+
+*/
 func setupADR() error {
 	if err := adr.Setup(config.C); err != nil {
 		return errors.Wrap(err, "setup adr error")
@@ -314,6 +326,11 @@ func setupRoaming() error {
 	return nil
 }
 
+/*
+topic为 gateway/+/event/+
+通过topic后缀来区分上下行消息 分别为 up（上行） act(下行) stats(上行，状态上报)
+通过MHDR.MType来进行区分消息类型.如joinreqeust
+*/
 func startLoRaServer(server *uplink.Server) func() error {
 	return func() error {
 		*server = *uplink.NewServer()

@@ -2,6 +2,7 @@ package mqtt
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	paho "github.com/eclipse/paho.mqtt.golang"
@@ -56,6 +57,30 @@ func (ts *BackendTestSuite) SetupTest() {
 	storage.RedisClient().FlushAll(context.Background())
 }
 
+func TestUplinkFrameCui(t *testing.T) {
+
+	uplinkFrame := gw.UplinkFrame{
+		PhyPayload: []byte{1, 2, 3, 4},
+		TxInfo: &gw.UplinkTXInfo{
+			Frequency: 868100000,
+		},
+		RxInfo: &gw.UplinkRXInfo{
+			GatewayId: []byte{1, 2, 3, 4, 5, 6, 7, 8},
+		},
+	}
+
+	b, _ := proto.Marshal(&uplinkFrame)
+	uplinkFrame.XXX_sizecache = 0
+	uplinkFrame.TxInfo.XXX_sizecache = 0
+	uplinkFrame.RxInfo.XXX_sizecache = 0
+	fmt.Println(b)
+
+	var uplinkFrame2 gw.UplinkFrame
+	proto.Unmarshal(b, &uplinkFrame2)
+	fmt.Println(uplinkFrame2)
+
+}
+
 func (ts *BackendTestSuite) TestUplinkFrame() {
 	assert := require.New(ts.T())
 
@@ -74,7 +99,7 @@ func (ts *BackendTestSuite) TestUplinkFrame() {
 	uplinkFrame.XXX_sizecache = 0
 	uplinkFrame.TxInfo.XXX_sizecache = 0
 	uplinkFrame.RxInfo.XXX_sizecache = 0
-
+	fmt.Println(b)
 	token := ts.mqttClient.Publish("gateway/0102030405060708/event/up", 0, false, b)
 	token.Wait()
 	assert.NoError(token.Error())
