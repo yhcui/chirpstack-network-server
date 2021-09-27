@@ -50,7 +50,7 @@ type Backend struct {
 	qos                  uint8
 
 	downMode         string
-	gatewayMarshaler map[lorawan.EUI64]marshaler.Type
+	gatewayMarshaler map[lorawan.EUI64]marshaler.Type // key为gatewayId ,value为Type(json或protobuf)
 }
 
 // NewBackend creates a new Backend.
@@ -220,6 +220,8 @@ func (b *Backend) rxPacketHandler(c paho.Client, msg paho.Message) {
 	defer b.wg.Done()
 
 	var uplinkFrame gw.UplinkFrame
+
+	// 将payload转为gw.UplinkFrame对象
 	t, err := marshaler.UnmarshalUplinkFrame(msg.Payload(), &uplinkFrame)
 	if err != nil {
 		log.WithFields(log.Fields{

@@ -32,6 +32,14 @@ const (
 // It is safe to collect the same packet received by the same gateway twice.
 // Since the underlying storage type is a set, the result will always be a
 // unique set per gateway MAC and packet MIC.
+/*
+主要功能：将gw.UplinkFrame 转为 models.RXPacket,并调用 callback
+描述
+收集数据包，休眠配置的持续时间，并使用数据包片段仅调用回调一次，按信号强度排序（在索引0处最强）。
+这种方法的存在是因为多个网关能够接收相同的数据包，但是数据包只需要处理一次。
+
+收集同一网关接收的同一数据包两次是安全的。由于底层存储类型是一个集合，因此每个网关MAC和数据包MIC的结果总是唯一的集合。
+*/
 func collectAndCallOnce(rxPacket gw.UplinkFrame, callback func(packet models.RXPacket) error) error {
 	phyKey := hex.EncodeToString(rxPacket.PhyPayload)
 	txInfoB, err := proto.Marshal(rxPacket.TxInfo)
@@ -43,17 +51,15 @@ func collectAndCallOnce(rxPacket gw.UplinkFrame, callback func(packet models.RXP
 	key := storage.GetRedisKey(CollectKeyTempl, txInfoHEX, phyKey)
 	lockKey := storage.GetRedisKey(CollectLockKeyTempl, txInfoHEX, phyKey)
 
-	// this way we can set a really low DeduplicationDelay for testing, without
-	// the risk that the set already expired in redis on read
-	deduplicationTTL := deduplicationDelay * 2
+	deduplicationTTL := deduplicationDelay * 2 // 缓存过期时间?
 	if deduplicationTTL < time.Millisecond*200 {
 		deduplicationTTL = time.Millisecond * 200
 	}
-
+	// 存放缓存中 -- deduplicationTTL:缓存超时时长
 	if err := collectAndCallOncePut(key, deduplicationTTL, rxPacket); err != nil {
 		return err
 	}
-
+	// lock -- deduplicationTTL:缓存超时时长
 	if locked, err := collectAndCallOnceLocked(lockKey, deduplicationTTL); err != nil || locked {
 		// when locked == true, err == nil
 		return err
@@ -118,9 +124,13 @@ func collectAndCallOncePut(key string, ttl time.Duration, rxPacket gw.UplinkFram
 	if err != nil {
 		return errors.Wrap(err, "marshal uplink frame error")
 	}
-
+	// 启用pipline管道模式的client
 	pipe := storage.RedisClient().TxPipeline()
+
+	// Sadd 命令将一个或多个成员元素加入到集合中，已经存在于集合的成员元素将被忽略
 	pipe.SAdd(context.Background(), key, b)
+
+	// 设置过期时间
 	pipe.PExpire(context.Background(), key, ttl)
 
 	_, err = pipe.Exec(context.Background())
@@ -151,7 +161,7 @@ func collectAndCallOnceLocked(key string, ttl time.Duration) (bool, error) {
 
 func collectAndCallOnceCollect(key string) ([][]byte, error) {
 	pipe := storage.RedisClient().Pipeline()
-	val := pipe.SMembers(context.Background(), key)
+	val := pipe.SMembers(context.Background(), key) // 命令返回集合中的所有的成员。 不存在的集合 key 被视为空集合
 	pipe.Del(context.Background(), key)
 
 	if _, err := pipe.Exec(context.Background()); err != nil {

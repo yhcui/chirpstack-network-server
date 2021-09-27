@@ -189,6 +189,9 @@ func runHandlerWithMetric(err error, mt lorawan.MType) error {
 	return err
 }
 
+/*
+ 根据网关元数据，并根据不同的消息类型，将由不同的handler进行处理并进行度量
+*/
 func handleCollectedUplink(ctx context.Context, uplinkFrame gw.UplinkFrame, rxPacket models.RXPacket) error {
 	// Update the gateway meta-data.
 	// This sets the location information from the database, decrypts the
