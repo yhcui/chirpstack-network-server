@@ -185,12 +185,50 @@ timezone="Local"
 # Join-server settings.
 [join_server]
 
+resolve_join_eui=true
+
+resolve_domain_suffix=".joineuis.lora-alliance.org"
+
+  [[join_server.servers]]
+  join_eui="0102030405060708"
+
+  # hostname:port of the default join-server
+  #
+  # This API is provided by ChirpStack Application Server.
+  server=""
+
+  ca_cert=""
+
+  tls_cert=""
+
+  tls_key=""
   # Default join-server settings.
   #
   # This join-server will be used when resolving the JoinEUI is set to false
   # or as a fallback when resolving the JoinEUI fails.
   [join_server.default]
+  join_eui="0102030405060708"
+
   # hostname:port of the default join-server
   #
   # This API is provided by ChirpStack Application Server.
   server="http://localhost:8003"
+
+  ca_cert=""
+
+  tls_cert=""
+
+  tls_key=""
+
+#[network_controller]
+## hostname:port of the network-controller api server (optional)
+#server="http://localhost:8003"
+#
+## ca certificate used by the network-controller client (optional)
+#ca_cert=""
+#
+## tls certificate used by the network-controller client (optional)
+#tls_cert=""
+#
+## tls key used by the network-controller client (optional)
+#tls_key=""

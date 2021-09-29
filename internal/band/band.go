@@ -11,11 +11,20 @@ import (
 var band loraband.Band
 
 // Setup sets up the band with the given configuration.
+/*
+设置频段、中继器、下行空中停留时间。如果配置额外的通道，
+dwellTime: 停留时间
+Repeater：中继器
+强制中继器兼容
+如果可能使用中继器，请将此标志设置为true
+
+*/
 func Setup(c config.Config) error {
 	dwellTime := lorawan.DwellTimeNoLimit
 	if c.NetworkServer.Band.DownlinkDwellTime400ms {
 		dwellTime = lorawan.DwellTime400ms
 	}
+
 	bandConfig, err := loraband.GetConfig(c.NetworkServer.Band.Name, c.NetworkServer.Band.RepeaterCompatible, dwellTime)
 	if err != nil {
 		return errors.Wrap(err, "get band config error")

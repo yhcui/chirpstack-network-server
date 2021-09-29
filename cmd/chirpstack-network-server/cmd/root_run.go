@@ -72,9 +72,9 @@ func run(cmd *cobra.Command, args []string) error {
 		setupADR,                // adr插件, https://zhuanlan.zhihu.com/p/113746989
 		setupJoinServer,         // join server。 设备入网时进行验证的服务.
 		setupNetworkController,  // todo 提供管理无线网络的能力，它通过MAC命令获取或设置End Nodes的网络参数和射频性能
-		setupUplink,             //入网、重新入网、数据传输
-		setupDownlink,           // 入网、广播、传用、数据
-		setupNetworkServerAPI,   // 启动网络服务api, grpc协议. 外部组件通过它来调度mac命令
+		setupUplink,             // 设置上行的入网、重新入网、数据传输配置数据
+		setupDownlink,           // 设置下行的入网、广播、传用、数据配置数据
+		setupNetworkServerAPI,   // 启动grpc协议,外部组件通过它来调度mac命令
 		setupRoaming,            // 漫游服务. https://blog.csdn.net/iotisan/article/details/102612404
 		setupGateways,           // 网关状态上报?
 		startLoRaServer(server), //启动loRaServer 处理上下行数据

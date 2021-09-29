@@ -47,7 +47,7 @@ func TestUnmarshalUplinkFrame(t *testing.T) {
 		}
 		b, err := proto.Marshal(&in)
 		assert.NoError(err)
-
+		fmt.Println(b)
 		var out gw.UplinkFrame
 		typ, err := UnmarshalUplinkFrame(b, &out)
 		assert.NoError(err)

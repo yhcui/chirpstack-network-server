@@ -38,13 +38,13 @@ func Setup(c config.Config) error {
 	conf := c.JoinServer
 	keks = make(map[string][]byte)
 
-	netID = c.NetworkServer.NetID
+	netID = c.NetworkServer.NetID // 网络唯一标识
 	defaultServer = c.JoinServer.Default.Server
 	defaultCACert = c.JoinServer.Default.CACert
 	defaultTLSCert = c.JoinServer.Default.TLSCert
 	defaultTLSKey = c.JoinServer.Default.TLSKey
-	resolveJoinEUI = c.JoinServer.ResolveJoinEUI
-	resolveDomainSuffix = c.JoinServer.ResolveDomainSuffix
+	resolveJoinEUI = c.JoinServer.ResolveJoinEUI           // 是否启用服务
+	resolveDomainSuffix = c.JoinServer.ResolveDomainSuffix // join 服务域名
 
 	for _, s := range conf.Servers {
 		var joinEUI lorawan.EUI64
@@ -166,6 +166,7 @@ func GetKEKKey(label string) ([]byte, error) {
 	return kek, nil
 }
 
+// 返回 server https域名
 func joinEUIToServer(joinEUI lorawan.EUI64, domain string) string {
 	nibbles := strings.Split(joinEUI.String(), "")
 
