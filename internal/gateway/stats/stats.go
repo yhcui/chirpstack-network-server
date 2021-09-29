@@ -21,6 +21,9 @@ import (
 
 var ErrAbort = errors.New("abort")
 
+/*
+网关上传状态的上下文
+*/
 type statsContext struct {
 	ctx          context.Context
 	gatewayID    lorawan.EUI64
@@ -29,10 +32,10 @@ type statsContext struct {
 }
 
 var tasks = []func(*statsContext) error{
-	updateGatewayState,
-	getGatewayMeta,
-	handleGatewayConfigurationUpdate,
-	forwardGatewayStats,
+	updateGatewayState,               // 修改网关 经度、纬度、高度、上传时间等信息
+	getGatewayMeta,                   // 获取网关元数据并缓存
+	handleGatewayConfigurationUpdate, // 向网关发送更新网关配置信息。如果配置网关配置及Concentratord信息,且状态上传的并非最新版本，则进行更新MQTT发送
+	forwardGatewayStats,              // 将网关状态信息转发给AS
 }
 
 // Handle handles the gateway stats
