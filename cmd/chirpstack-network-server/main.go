@@ -60,6 +60,13 @@ func init() {
 
 var version string // set by the compiler
 
+/*
+一定要结合NS整个配置文件来看
+https://www.chirpstack.io/network-server/install/config/
+
+packet_forward的一个协议文档
+https://github.com/Lora-net/packet_forwarder/blob/master/PROTOCOL.TXT
+*/
 func main() {
 	cmd.Execute(version)
 }

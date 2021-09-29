@@ -78,7 +78,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupRoaming,            // 漫游服务. https://blog.csdn.net/iotisan/article/details/102612404
 		setupGateways,           // 网关状态上报?
 		startLoRaServer(server), //启动loRaServer 处理上下行数据
-		startQueueScheduler,     // 不知道干么的？
+		startQueueScheduler,     // 好像是下行消息是广播还是单发某个设备的相关代码
 	}
 	// 循环启动每一个任务
 	for _, t := range tasks {
