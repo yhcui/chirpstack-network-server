@@ -67,8 +67,8 @@ func run(cmd *cobra.Command, args []string) error {
 		setupMonitoring,         // 设置时区与监控信息
 		enableUplinkChannels,    // 设置启用的上行通道
 		setupStorage,            // 启动存储相关的.连接redis和PostgreSQL
-		setGatewayBackend,       // 启动网关服务。此处之基站与NS的协议服务。如:MQTT
-		setupApplicationServer,  // 启用as,连接池
+		setGatewayBackend,       // 设置网关服务。此处之基站与NS的协议服务。如:MQTT
+		setupApplicationServer,  // 设置AS连接池
 		setupADR,                // adr插件, https://zhuanlan.zhihu.com/p/113746989
 		setupJoinServer,         // join server。 设备入网时进行验证的服务.
 		setupNetworkController,  // todo 提供管理无线网络的能力，它通过MAC命令获取或设置End Nodes的网络参数和射频性能

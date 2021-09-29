@@ -19,6 +19,12 @@ type StatsHandler struct {
 }
 
 // Start starts the stats handler.
+/*
+1、更新网关表数据
+2、缓存网关表数据
+3、向网关下发MQTT信息
+4、转发给AS
+*/
 func (s *StatsHandler) Start() error {
 	go func() {
 		s.wg.Add(1)
