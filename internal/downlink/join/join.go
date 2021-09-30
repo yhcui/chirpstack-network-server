@@ -29,12 +29,12 @@ var (
 
 var tasks = []func(*joinContext) error{
 	setDeviceGatewayRXInfo,
-	selectDownlinkGateway,
+	selectDownlinkGateway, // 根据 SNR 选择下行网关
 	setTXInfo,
 	setToken,
 	setDownlinkFrame,
-	sendJoinAcceptResponse,
-	saveDownlinkFrame,
+	sendJoinAcceptResponse, // 发送join accept response
+	saveDownlinkFrame,      //入缓存
 }
 
 type joinContext struct {

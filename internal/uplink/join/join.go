@@ -95,14 +95,14 @@ func Handle(ctx context.Context, rxPacket models.RXPacket) error {
 		jctx.logJoinRequestFramesCollected,
 		jctx.abortOnDeviceIsDisabled,
 		jctx.validateNonce,
-		jctx.getRandomDevAddr,
+		jctx.getRandomDevAddr, // 生成 dev addr
 		jctx.getJoinAcceptFromAS,
 		jctx.sendUplinkMetaDataToNetworkController,
-		jctx.flushDeviceQueue,
-		jctx.createDeviceSession,
-		jctx.createDeviceActivation,
-		jctx.setDeviceMode,
-		jctx.sendJoinAcceptDownlink,
+		jctx.flushDeviceQueue,       // 删除device queue
+		jctx.createDeviceSession,    // save redis?
+		jctx.createDeviceActivation, // 设备入网数据存放db
+		jctx.setDeviceMode,          // class a or class b, update database
+		jctx.sendJoinAcceptDownlink, // 发送
 	} {
 		if err := f(); err != nil {
 			if err == ErrAbort {
