@@ -125,8 +125,10 @@ func HandleUplinkFrame(ctx context.Context, uplinkFrame gw.UplinkFrame) error {
 	return collectUplinkFrames(ctx, uplinkFrame)
 }
 
-// HandleDownlinkTXAcks consumes received downlink tx acknowledgements from
-// the gateway.
+// HandleDownlinkTXAcks consumes received downlink tx acknowledgements from the gateway.
+/*
+处理topic以ack结尾的消息
+*/
 func HandleDownlinkTXAcks(wg *sync.WaitGroup) {
 	for downlinkTXAck := range gwbackend.Backend().DownlinkTXAckChan() {
 		go func(downlinkTXAck gw.DownlinkTXAck) {

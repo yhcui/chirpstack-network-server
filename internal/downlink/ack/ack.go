@@ -30,12 +30,12 @@ var (
 )
 
 var handleDownlinkTXAckTasks = []func(*ackContext) error{
-	getToken,
-	getDownlinkFrame,
-	decodePHYPayload,
+	getToken,         // 获取token,token在这里是干么的？
+	getDownlinkFrame, //根据token从缓存中获取DownlinkFrame TODO 什么节点放的？
+	decodePHYPayload, // decode phypalyload,获取MHDR， macplayload
 	onError(
 		forApplicationPayload(
-			sendErrorToApplicationServerOnLastFrame,
+			sendErrorToApplicationServerOnLastFrame, // 给AS发送错误消息
 		),
 		forMulticastPayload(
 			// TODO: For now we delete the multicast queue-item. What would be the best
@@ -47,8 +47,8 @@ var handleDownlinkTXAckTasks = []func(*ackContext) error{
 		),
 
 		// Backwards compatibility.
-		sendDownlinkFrame,
-		saveDownlinkFrames,
+		sendDownlinkFrame,  // 通过command_topic_template发送给MQTT
+		saveDownlinkFrames, // 保存DownLinkFrames到redis中
 	),
 	onNoError(
 		// Start a transaction so that we can lock the device record. Without
@@ -77,13 +77,13 @@ var handleDownlinkTXAckTasks = []func(*ackContext) error{
 		forMACOnlyPayload(
 			getDeviceSession,
 			incrementNFcntDown,
-			saveDeviceSession,
+			saveDeviceSession, // 保存到缓存中
 		),
 		forMulticastPayload(
-			deleteMulticastQueueItem,
+			deleteMulticastQueueItem, // 删除数据库的数据？
 		),
-		sendDownlinkMetaDataToNetworkController,
-		logDownlinkFrame,
+		sendDownlinkMetaDataToNetworkController, // network controller是啥
+		logDownlinkFrame,                        // 记录日志
 	),
 }
 
