@@ -121,7 +121,7 @@ var responseTasks = []func(*dataContext) error{
 	setToken,
 	getNextDeviceQueueItem,
 	setMACCommandsSet,
-	stopOnNothingToSend,
+	stopOnNothingToSend, // 如果不需要上行的ack，在这边进行停止进行流程处理
 	setPHYPayloads,
 	isRoaming(false,
 		sendDownlinkFrame,

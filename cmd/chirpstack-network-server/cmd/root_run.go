@@ -351,10 +351,10 @@ func setupGateways() error {
 
 /*
 消息可以是单播，也可以是组播。给一个终端设备单独发送消息使用单播，给多个终端设备发送使用组播。
-只支持 model B and model C?
 */
 func startQueueScheduler() error {
 	log.Info("starting downlink device-queue scheduler")
+	// 只处理 class b和class c的设备
 	go downlink.DeviceQueueSchedulerLoop()
 
 	log.Info("starting multicast scheduler")

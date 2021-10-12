@@ -59,8 +59,8 @@ var tasks = []func(*dataContext) error{
 	sendFRMPayloadToApplicationServer,
 	syncUplinkFCnt,
 	saveDeviceSession,
-	handleUplinkACK,
-	handleDownlink, // 处理下行，在此处有选择网关代码
+	handleUplinkACK, // 给AS发送Uplink ACK信息?
+	handleDownlink,  // 处理下行，在此处有选择网关代码。这里的Downlink是指上行的ACK
 }
 
 var (
@@ -86,7 +86,7 @@ type dataContext struct {
 	DeviceSession           storage.DeviceSession
 	DeviceProfile           storage.DeviceProfile
 	ServiceProfile          storage.ServiceProfile
-	ApplicationServerClient as.ApplicationServerServiceClient
+	ApplicationServerClient as.ApplicationServerServiceClient // 此处通过grpc实现的
 	MACCommandResponses     []storage.MACCommandBlock
 	MustSendDownlink        bool
 }
