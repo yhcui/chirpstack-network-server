@@ -76,7 +76,7 @@ func run(cmd *cobra.Command, args []string) error {
 		setupDownlink,           // 设置下行的入网、广播、传用、数据配置数据
 		setupNetworkServerAPI,   // 启动grpc协议,外部组件通过它来调度mac命令
 		setupRoaming,            // 漫游服务. https://blog.csdn.net/iotisan/article/details/102612404
-		setupGateways,           // 处理网关上传的状态上报数据
+		setupGateways,           // StatsPacketChan -- 处理网关上传的状态上报数据
 		startLoRaServer(server), // 启动loRaServer 处理上下行数据
 		startQueueScheduler,     // 好像是下行消息是广播还是单发某个设备的相关代码
 	}

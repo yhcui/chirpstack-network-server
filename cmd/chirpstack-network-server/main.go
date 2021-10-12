@@ -67,6 +67,8 @@ https://www.chirpstack.io/network-server/install/config/
 packet_forward的一个协议文档
 https://github.com/Lora-net/packet_forwarder/blob/master/PROTOCOL.TXT
 
+关于gRPC: https://www.chirpstack.io/network-server/integrate/api/
+
 其它相关网址
 LoraWAN规范				https://lora-alliance.org/lorawan-for-developers/
 chirpstack作者github		https://github.com/brocaar
