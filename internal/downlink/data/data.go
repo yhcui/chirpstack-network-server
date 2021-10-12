@@ -116,7 +116,7 @@ var responseTasks = []func(*dataContext) error{
 	getDeviceProfile,
 	getServiceProfile,
 	setDeviceGatewayRXInfo,
-	selectDownlinkGateway,
+	selectDownlinkGateway, // 选择下行网关
 	setDataTXInfo,
 	setToken,
 	getNextDeviceQueueItem,
@@ -531,6 +531,9 @@ func preferRX2LinkBudget(ctx *dataContext) (b bool, err error) {
 	return linkBudgetRX2 > linkBudgetRX1, nil
 }
 
+/*
+选择下行gateway
+*/
 func selectDownlinkGateway(ctx *dataContext) error {
 	var err error
 	ctx.DownlinkGateway, err = dwngateway.SelectDownlinkGateway(gatewayPreferMinMargin, ctx.DeviceSession.DR, ctx.DeviceGatewayRXInfo)

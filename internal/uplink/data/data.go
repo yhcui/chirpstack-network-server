@@ -60,7 +60,7 @@ var tasks = []func(*dataContext) error{
 	syncUplinkFCnt,
 	saveDeviceSession,
 	handleUplinkACK,
-	handleDownlink,
+	handleDownlink, // 处理下行，在此处有选择网关代码
 }
 
 var (

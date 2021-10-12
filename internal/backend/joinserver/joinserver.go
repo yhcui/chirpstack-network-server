@@ -43,10 +43,15 @@ func Setup(c config.Config) error {
 	defaultCACert = c.JoinServer.Default.CACert
 	defaultTLSCert = c.JoinServer.Default.TLSCert
 	defaultTLSKey = c.JoinServer.Default.TLSKey
-	resolveJoinEUI = c.JoinServer.ResolveJoinEUI           // 是否启用服务
+
+	/*
+		设置为true时，ChirpStack网络服务器将使用JoinEUI解析给定JoinEUI的加入服务器。
+		当解决JoinEUI失败时，ChirpStack网络服务器将退回默认的join服务器。
+	*/
+	resolveJoinEUI = c.JoinServer.ResolveJoinEUI
 	resolveDomainSuffix = c.JoinServer.ResolveDomainSuffix // join 服务域名
 
-	for _, s := range conf.Servers {
+	for _, s := range conf.Servers { // ChirpStack Application Server
 		var joinEUI lorawan.EUI64
 		if err := joinEUI.UnmarshalText([]byte(s.JoinEUI)); err != nil {
 			return errors.Wrap(err, "decode joineui error")

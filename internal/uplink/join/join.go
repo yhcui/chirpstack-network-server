@@ -88,9 +88,9 @@ func Handle(ctx context.Context, rxPacket models.RXPacket) error {
 
 	for _, f := range []func() error{
 		jctx.setContextFromJoinRequestPHYPayload,
-		jctx.getDeviceOrTryRoaming,
-		jctx.getDeviceProfile,
-		jctx.getServiceProfile,
+		jctx.getDeviceOrTryRoaming, // 根据JoinRequestPayload.DevEUI获取Device。如果设备不存在且启用了漫游StartPRFNS
+		jctx.getDeviceProfile,      // 根据DeviceProfileID获取device_profile
+		jctx.getServiceProfile,     // 根据Device中的ServiceProfileID获取sevice_profile
 		jctx.filterRxInfoByServiceProfile,
 		jctx.logJoinRequestFramesCollected,
 		jctx.abortOnDeviceIsDisabled,

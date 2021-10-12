@@ -48,6 +48,7 @@ func collectAndCallOnce(rxPacket gw.UplinkFrame, callback func(packet models.RXP
 	}
 	txInfoHEX := hex.EncodeToString(txInfoB)
 
+	// 根据TxInfo和PhyPalyload 生成16进制唯一标识并生成rediskey,Txinfo中没有gatewayID
 	key := storage.GetRedisKey(CollectKeyTempl, txInfoHEX, phyKey)
 	lockKey := storage.GetRedisKey(CollectLockKeyTempl, txInfoHEX, phyKey)
 
@@ -55,11 +56,11 @@ func collectAndCallOnce(rxPacket gw.UplinkFrame, callback func(packet models.RXP
 	if deduplicationTTL < time.Millisecond*200 {
 		deduplicationTTL = time.Millisecond * 200
 	}
-	// 存放缓存中 -- deduplicationTTL:缓存超时时长
+	// 将rxPacket存放缓存中,相同key只会存放一次 -- deduplicationTTL:缓存超时时长
 	if err := collectAndCallOncePut(key, deduplicationTTL, rxPacket); err != nil {
 		return err
 	}
-	// lock -- deduplicationTTL:缓存超时时长
+	// 加lock -- deduplicationTTL:缓存超时时长
 	if locked, err := collectAndCallOnceLocked(lockKey, deduplicationTTL); err != nil || locked {
 		// when locked == true, err == nil
 		return err
@@ -67,13 +68,15 @@ func collectAndCallOnce(rxPacket gw.UplinkFrame, callback func(packet models.RXP
 
 	// wait the configured amount of time, more packets might be received
 	// from other gateways
+	// 休眠 -- 非常重要
 	time.Sleep(deduplicationDelay)
 
-	// collect all packets from the set
+	// collect all packets from the set 同时删除缓存key及相关数据
 	payloads, err := collectAndCallOnceCollect(key)
 	if err != nil {
 		return errors.Wrap(err, "get deduplication set members error")
 	}
+	// 此处为rxPacket
 	if len(payloads) == 0 {
 		return errors.New("zero items in collect set")
 	}

@@ -42,6 +42,11 @@ func (s BySignal) Less(i, j int) bool {
 // and return:
 //  * A random item from the elements with an SNR > minSNR
 //  * The first item of the sorted slice (failing the above)
+/*
+在当前的实现中，它将根据SNR/RSSI对给定的切片进行排序，并返回：
+1 信噪比>最小信噪比的元素中的随机项
+2 已排序切片的第一项（ 1 操作失败）
+*/
 func SelectDownlinkGateway(minSNRMargin float64, rxDR int, rxInfo []storage.DeviceGatewayRXInfo) (storage.DeviceGatewayRXInfo, error) {
 	if len(rxInfo) == 0 {
 		return storage.DeviceGatewayRXInfo{}, errors.New("device gateway rx-info slice is empty")
@@ -57,6 +62,7 @@ func SelectDownlinkGateway(minSNRMargin float64, rxDR int, rxInfo []storage.Devi
 	// This builds a slice of items where the (Required SNR - RX SNR) > minMargin.
 	var newRxInfo []storage.DeviceGatewayRXInfo
 	for i := range rxInfo {
+		// 这里"-"是一个减
 		if dr.Modulation == loraband.LoRaModulation && (rxInfo[i].LoRaSNR-config.SpreadFactorToRequiredSNRTable[dr.SpreadFactor]) >= minSNRMargin {
 			newRxInfo = append(newRxInfo, rxInfo[i])
 		}

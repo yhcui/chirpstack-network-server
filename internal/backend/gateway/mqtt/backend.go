@@ -79,6 +79,8 @@ func NewBackend(c config.Config) (gateway.Gateway, error) {
 	opts.SetPassword(conf.Password)
 	opts.SetCleanSession(conf.CleanSession)
 	opts.SetClientID(conf.ClientID)
+
+	// 当连接成功时进行的操作
 	opts.SetOnConnectHandler(b.onConnected)
 	opts.SetConnectionLostHandler(b.onConnectionLost)
 	opts.SetMaxReconnectInterval(conf.MaxReconnectInterval)
@@ -221,7 +223,7 @@ func (b *Backend) rxPacketHandler(c paho.Client, msg paho.Message) {
 
 	var uplinkFrame gw.UplinkFrame
 
-	// 将payload转为gw.UplinkFrame对象
+	// 将payload转为gw.UplinkFrame对象.里面有代码根据是否有gatewayID进行判断
 	t, err := marshaler.UnmarshalUplinkFrame(msg.Payload(), &uplinkFrame)
 	if err != nil {
 		log.WithFields(log.Fields{
