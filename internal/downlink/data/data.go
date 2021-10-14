@@ -115,8 +115,8 @@ var setMACCommandsSet = setMACCommands(
 var responseTasks = []func(*dataContext) error{
 	getDeviceProfile,
 	getServiceProfile,
-	setDeviceGatewayRXInfo,
-	selectDownlinkGateway, // 选择下行网关
+	setDeviceGatewayRXInfo, // 设置ctx.DeviceGatewayRXInfo
+	selectDownlinkGateway,  // 选择下行网关 -- 此时已经有了DeviceSession
 	setDataTXInfo,
 	setToken,
 	getNextDeviceQueueItem,

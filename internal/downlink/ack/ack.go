@@ -259,6 +259,9 @@ func forMulticastPayload(funcs ...func(*ackContext) error) func(*ackContext) err
 	}
 }
 
+/*
+存在token用token，不存在token使用downlinkId
+*/
 func getToken(ctx *ackContext) error {
 	if ctx.DownlinkTXAck.Token != 0 {
 		ctx.Token = uint16(ctx.DownlinkTXAck.Token)

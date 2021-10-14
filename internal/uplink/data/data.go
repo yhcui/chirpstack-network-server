@@ -38,7 +38,7 @@ var ErrAbort = errors.New("nothing to do")
 var tasks = []func(*dataContext) error{
 	setContextFromDataPHYPayload,
 	handlePassiveRoamingDevice,
-	getDeviceSessionForPHYPayload,
+	getDeviceSessionForPHYPayload, //获取DeviceSession并设置ctx.DeviceSession? 此处从redis获取，但在后面才保存到redis中。怎么回事呢？
 	abortOnDeviceIsDisabled,
 	getDeviceProfile,
 	getServiceProfile,
@@ -58,9 +58,9 @@ var tasks = []func(*dataContext) error{
 	appendMetaDataToUplinkHistory,
 	sendFRMPayloadToApplicationServer,
 	syncUplinkFCnt,
-	saveDeviceSession,
-	handleUplinkACK, // 给AS发送Uplink ACK信息?
-	handleDownlink,  // 处理下行，在此处有选择网关代码。这里的Downlink是指上行的ACK
+	saveDeviceSession, // 保存DeviceSession
+	handleUplinkACK,   // 给AS发送Uplink ACK信息?
+	handleDownlink,    // 处理下行，在此处有选择网关代码。这里的Downlink是指上行的ACK
 }
 
 var (
